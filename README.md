@@ -7,19 +7,19 @@
 </ol>
 <p>После клонирования репозитория у вас будет вот такая картина:</p>
 ```
-"Ваша папка"
-  └── Calculator/
-      ├── pkg/                      
-      │   └── rpn/                  
-      │       ├── calc.go           
-      │       ├── validate.go       
-      │       └── rpn_test.go       
-      ├── internal/                 
-      │   └── application/         
-      │       └── handlers.go       
-      ├── cmd/                      
-      │   └── main.go               
-      └── README.md
+Ваша папка
+   └── Calculator/
+        ├── pkg/
+        │   └── rpn/
+        │   ├── calc.go
+        │   ├── validate.go
+        │   └── rpn_test.go
+        ├── internal/
+        │   └── application/
+        │   └── handlers.go
+        ├── cmd/
+        │   └── main.go
+        └── README.md
 ```
 <p>Перейдите в сmd: cd Calculator/cmd и запустите main.go: go run main.go</main></p>                 
 <p>После того, как вы запустили главный файл проекта вам нужно будет передать запрос серверу с помощью утилиты curl или postman.</p>
