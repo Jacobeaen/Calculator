@@ -4,6 +4,20 @@
 <ol>
     <li>Перейдите в папку, куда вы хотите сколонировать репозиторий, например C:/Code/LMS</li>
     <li>Скопируйте репозиторий командой git clone https://github.com/Jacobeaen/Calculator.git</li>
-    <li>Перейдите в директорию Calculator/cmd и запустите файл main.go: go run main.go</li>
 </ol>
+После клонирования репозитория у вас будет вот такая картина:
+<"Ваша папка">
+  └── Calculator/
+      ├── pkg/                      
+      │   └── rpn/                  
+      │       ├── calc.go           
+      │       ├── validate.go       
+      │       └── rpn_test.go       
+      ├── internal/                 
+      │   └── application/         
+      │       └── handlers.go       
+      ├── cmd/                      
+      │   └── main.go               
+      └── README.md
+<p>Переййдите в сmd: cd Calculator/cmd и запустите main.go: go run main.go</main></p>                 
 <p>После того, как вы запустили главный файл проекта вам нужно будет передать запрос серверу с помощью утилиты curl или postman.</p>
