@@ -7,19 +7,23 @@
 </ol>
 <p>После клонирования репозитория у вас будет вот такая картина:</p>
 ```
-Ваша папка
-   └── Calculator/
-        ├── pkg/
-        │   └── rpn/
-        │   ├── calc.go
-        │   ├── validate.go
-        │   └── rpn_test.go
-        ├── internal/
-        │   └── application/
-        │   └── handlers.go
-        ├── cmd/
-        │   └── main.go
-        └── README.md
+LMS
+├───main.go (1881b)
+├───main_test.go (1318b)
+└───Calculator
+	├───pkg
+	│	├───rpn (19b)
+	│	└───gopher.png (70372b)
+	├───static
+	│	├───css
+	│	│	└───body.css (28b)
+	│	├───html
+	│	│	└───index.html (57b)
+	│	└───js
+	│		└───site.js (10b)
+	├───zline
+	│	└───empty.txt (empty)
+	└───zzfile.txt (empty)
 ```
 <p>Перейдите в сmd: cd Calculator/cmd и запустите main.go: go run main.go</main></p>                 
 <p>После того, как вы запустили главный файл проекта вам нужно будет передать запрос серверу с помощью утилиты curl или postman.</p>
