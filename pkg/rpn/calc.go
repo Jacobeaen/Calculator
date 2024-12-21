@@ -1,127 +1,14 @@
 package rpn
 
 import (
-	"errors"
 	"strconv"
 	"strings"
 )
 
-// Есть ли пара [i, j] в массиве [[], [], ... , []]
-func IsPairInArray(pair []int, array [][]int) bool {
-	for _, brackets := range array {
-		if brackets[0] == pair[0] && brackets[1] == pair[1] {
-			return true
-		}
-	}
-
-	return false
-}
-
-// Есть ли символ в строке
-func IsSymbolInString(el rune, source []rune) bool {
-	for _, x := range source {
-		if x == el {
-			return true
-		}
-	}
-
-	return false
-}
-
-// Последний элемент массива
-func GetLastElement(array []string) string {
-	return array[len(array)-1]
-}
-
-// Слайс из индексов закрывающих скобок
-func OpenBracketsIndexes(source string) (result []int, err error) {
-	for index, el := range source {
-		if el == '(' {
-			result = append(result, index)
-		}
-	}
-
-	if len(result) != 0 {
-		return result, nil
-	}
-
-	return result, errors.New("there is no open brackets in string")
-}
-
-// Кол-во элементов в срезе меньше указаного
-func MinLength(element, start int, open []int) int {
-	count := 0
-	for _, open_br := range open[start:] {
-		if element > open_br {
-			count += 1
-		} else {
-			break
-		}
-	}
-
-	return count
-}
-
-// Индексы открывающей и закрывающей ее скобок
-func PairsBracketsIndexes(source string, open []int) ([][]int, error) {
-	result := make([][]int, 0)
-
-	if len(open) == 0 {
-		return nil, errors.New("there is no brackets in the string")
-	}
-
-	for _, open_br := range open {
-		close_br := open_br + 1
-		count := 1
-
-		for count != 0 {
-			if source[close_br] == '(' {
-				count++
-			} else if source[close_br] == ')' {
-				count--
-			}
-			close_br++
-		}
-		close_br--
-
-		pair := []int{open_br, close_br}
-		result = append(result, pair)
-	}
-
-	return result, nil
-}
-
-// Есть в строке скобки
-func IsSubstringHaveBrackets(source string, pair []int) bool {
-	start_i := pair[0] + 1
-	end_i := pair[1]
-
-	for _, symbol := range source[start_i:end_i] {
-		if symbol == '(' || symbol == ')' {
-			return false
-		}
-	}
-
-	return true
-}
-
-// Список скобок без внутрених скобок
-func OnlySimpleBreakets(source string, array [][]int) (result [][]int) {
-	for _, pair := range array {
-		if IsSubstringHaveBrackets(source, pair) {
-			if !IsPairInArray(pair, result) {
-				result = append(result, pair)
-			}
-		}
-	}
-
-	return result
-}
-
 // Операция над двумя числами
 func Operation(array []float64, operation rune) (float64, error) {
 	if len(array) < 2 {
-		return 0, errors.New("can't do operation. there is no numbers")
+		return 0, ErrOperationWithoutNumbers
 	}
 
 	number1 := array[len(array)-2]
@@ -137,14 +24,10 @@ func Operation(array []float64, operation rune) (float64, error) {
 		if number2 != 0 {
 			return number1 / number2, nil
 		}
-		return 0, errors.New("zero division error")
+		return 0, ErrZeroDivison
 	}
 
-	return 0, errors.New("unknow operation")
-}
-
-func IsSymbolDigit(symbol rune) bool {
-	return symbol >= '0' && symbol <= '9'
+	return 0, ErrUnknownOperation
 }
 
 func CalculateExpression(source string) (float64, error) {
@@ -205,7 +88,7 @@ func CalculateExpression(source string) (float64, error) {
 
 		} else if IsSymbolInString(symbol, signs) {
 			if len(numbers) < 1 {
-				return 0, errors.New("can't do operation without numbers")
+				return 0, ErrOperationWithoutNumbers
 
 				// Если первый знак - просто добавляем
 			} else if len(operations) == 0 {
@@ -216,11 +99,11 @@ func CalculateExpression(source string) (float64, error) {
 			} else {
 				if rating[last_sign] >= rating[symbol] {
 					if len(numbers) < 2 {
-						return 0, errors.New("wrong fromat")
+						return 0, ErrOperationWithoutNumbers
 					}
 					result, err := Operation(numbers, last_sign)
 					if err != nil {
-						return 0, errors.New("wrong fromat")
+						return 0, err
 					}
 
 					count_numbers -= 2
@@ -264,7 +147,7 @@ func CalculateExpression(source string) (float64, error) {
 		result, err := Operation(numbers, operations[i])
 
 		if err != nil {
-			return 0, errors.New("wrong")
+			return 0, err
 		}
 		numbers = numbers[:j]
 		j--
@@ -278,11 +161,17 @@ func CalculateExpression(source string) (float64, error) {
 }
 
 func Calc(source string) (float64, error) {
-	if !IsStringCorrect(source) {
-		return 0, errors.New("wrong format")
+	source = strings.ReplaceAll(source, " ", "")
+	if len(source) == 0 {
+		return 0, ErrEmptyExpression
 	}
 
-	source = strings.ReplaceAll(source, " ", "")
+	_, err := IsStringCorrect(source)
+
+	if err != nil {
+		return 0, err
+	}
+
 	for {
 		x, _ := OpenBracketsIndexes(source)
 		z, _ := PairsBracketsIndexes(source, x)
@@ -304,7 +193,7 @@ func Calc(source string) (float64, error) {
 			result, err := CalculateExpression(source)
 
 			if err != nil {
-				return 0, errors.New("wrong")
+				return 0, err
 			}
 			return result, nil
 		}
