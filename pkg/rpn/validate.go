@@ -30,7 +30,7 @@ func IsSymbolAllowed(symbol rune, array []rune) bool {
 }
 
 // Проверка строки на правильный формат
-func IsStringCorrect(source string) bool {
+func IsStringCorrect(source string) (bool, error) {
 	array := []rune{
 		'+', '0', '1',
 		'-', '2', '3',
@@ -42,9 +42,13 @@ func IsStringCorrect(source string) bool {
 
 	for _, el := range source {
 		if !IsSymbolAllowed(el, array) {
-			return false
+			return false, ErrForbiddenSymbols
 		}
 	}
 
-	return IsBracketsCorrect(source)
+	if !IsBracketsCorrect(source) {
+		return false, ErrBracketsPair
+	}
+
+	return true, nil
 }
